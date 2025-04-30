@@ -19,7 +19,7 @@ This information is then put into an excel file.
 ## Installation
 To run this project on your computer, first navigate to the folder you wish to store it in and clone it
 ```
-git clone 
+git clone https://github.com/kevzjhu/Patent-Finder
 ```
 
 After cloning the project, please install the dependencies by running this command:

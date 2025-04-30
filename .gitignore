@@ -1,3 +1,4 @@
 .env
 Files/
 Reference Files/
+__pycache__/
