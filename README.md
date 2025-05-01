@@ -35,7 +35,7 @@ pip install -r requirements.txt
 
 3. Create a file within the directory called ".env" and paste your API key like so:
 ```
-GEMINI_KEY= YOUR API KEY HERE
+GEMINI_KEY=YOUR API KEY HERE
 ```
 
 The folder structure of this project can be represented as the following
