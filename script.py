@@ -171,32 +171,46 @@ def add_rows(log_func=print):
 
             # Patent Review
             # Using claims_text, summarize each claim
+            """
             patent_review = prompt_gemini(
                 [
                     claims_text,
                     "Summarize each claim in a few sentences each. Do not use markdown formatting.",
                 ]
-            )
+            )"""
 
             # TODO: Ask dad for definition of circuit, process, package, and system
             # Patent Type
             # Using description_text and claims_text, choose between circuit, process, package, and system
+            # circuit: Integrated circuits are compact electronic chips made up of interconnected components that include resistors, transistors, and capacitors.
+            # process: Process of creating an electronic device
+            # package: A semiconductor package is a metal, plastic, glass, or ceramic casing containing one or more discrete semiconductor devices or integrated circuits
+            # system: If it's not the other three, put it into system.
             patent_type = prompt_gemini(
                 [
                     description_text,
                     claims_text,
-                    "Using information from the patent description and patent claims, categorize the patent into one of the following categories: Circuit, Process, Package, or System. Do not use markdown formatting.",
+                    "Using information from the patent description and patent claims, categorize the patent into one of the following categories: "
+                    "Circuit, Process, Package, or System. "
+                    "Use the following definitions to categorize the patents:"
+                    "Circuit: Integrated circuits are compact electronic chips made up of interconnected components that include resistors, transistors, and capacitors."
+                    "Process: The process of creating or manufacturing an electronic device."
+                    "Package: A semiconductor package is a metal, plastic, glass, or ceramic casing containing one or more discrete semiconductor devices or integrated circuits."
+                    "System: If it's not the other three, classify the patent as System"
+                    "Do not use markdown formatting.",
                 ]
             )
 
             # Main Topic/Subject of the Invention
             # Using description_text, summarize the main topic of the invention in a few sentences
+            """
             main_topic = prompt_gemini(
                 [
                     description_text,
                     "In a few sentences, summarize the main topic of the invention. Do not use markdown formatting.",
                 ]
             )
+            """
 
             # add a new row
             new_row = {
@@ -208,8 +222,8 @@ def add_rows(log_func=print):
                 "Abstract": abstract,
                 "Claim 1": claim1,
                 "Patent Type": patent_type,
-                "Main Topic/Subject of the invention": main_topic,
-                "Patent Review": patent_review,
+                # "Main Topic/Subject of the invention": main_topic,
+                # "Patent Review": patent_review,
             }
 
             # limited to 30 requests per minute
@@ -256,6 +270,7 @@ def format_saved_file():
     for row in range(2, len(export_df) + 2):
         link = ws[f"B{row}"].value
         if link:
+            ws[f"B{row}"].value = ws[f"A{row}"].value
             ws[f"B{row}"].hyperlink = link
             ws[f"B{row}"].style = "Hyperlink"
 
