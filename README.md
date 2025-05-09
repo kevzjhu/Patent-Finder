@@ -23,8 +23,13 @@ git clone https://github.com/kevzjhu/Patent-Finder
 ```
 
 After cloning the project, please install the dependencies by running this command:
-```bash
+```
 pip install -r requirements.txt
+```
+
+Then change directories into Patent-Finder using this command:
+```
+cd Patent-Finder
 ```
 
 ## Usage
@@ -35,12 +40,12 @@ pip install -r requirements.txt
 
 3. Create a file within the directory called ".env" and paste your API key like so:
 ```
-GEMINI_KEY= YOUR API KEY HERE
+GEMINI_KEY=YOUR API KEY HERE
 ```
 
 The folder structure of this project can be represented as the following
 ```
-Patent Finder
+Patent-Finder
 |   README.md
 |   .env
 |   gui.py
@@ -53,7 +58,7 @@ Patent Finder
 
 4. The input file must be an Excel file with the header "Patent Number" (Cell A1). The patent numbers you wish to extract information from should go below this header. 
 
-5. To run the program, navigate to your directory and run the following command:
+5. To run the program, navigate to your directory (make sure you're in Patent-Finder) and run the following command:
 ```bash
 python main.py
 ```
