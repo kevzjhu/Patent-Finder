@@ -23,8 +23,13 @@ git clone https://github.com/kevzjhu/Patent-Finder
 ```
 
 After cloning the project, please install the dependencies by running this command:
-```bash
+```
 pip install -r requirements.txt
+```
+
+Then change directories into Patent-Finder using this command:
+```
+cd Patent-Finder
 ```
 
 ## Usage
