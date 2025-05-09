@@ -45,7 +45,7 @@ GEMINI_KEY=YOUR API KEY HERE
 
 The folder structure of this project can be represented as the following
 ```
-Patent Finder
+Patent-Finder
 |   README.md
 |   .env
 |   gui.py
@@ -58,7 +58,7 @@ Patent Finder
 
 4. The input file must be an Excel file with the header "Patent Number" (Cell A1). The patent numbers you wish to extract information from should go below this header. 
 
-5. To run the program, navigate to your directory and run the following command:
+5. To run the program, navigate to your directory (make sure you're in Patent-Finder) and run the following command:
 ```bash
 python main.py
 ```
