@@ -2,3 +2,6 @@
 Files/
 Reference Files/
 __pycache__/
+build/
+dist/
+main.spec
