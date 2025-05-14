@@ -179,7 +179,6 @@ def add_rows(log_func=print):
                 ]
             )"""
 
-            # TODO: Ask dad for definition of circuit, process, package, and system
             # Patent Type
             # Using description_text and claims_text, choose between circuit, process, package, and system
             # circuit: Integrated circuits are compact electronic chips made up of interconnected components that include resistors, transistors, and capacitors.
