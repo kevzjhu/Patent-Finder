@@ -68,12 +68,15 @@ def prompt_gemini(content_list):
     return response.text
 
 
-def add_rows(log_func=print):
+def add_rows(us_patents, log_func=print):
     driver = webdriver.Firefox()
 
     for index, row in import_df.iterrows():
         # go through every row
         patent_number = row["Patent Number"]
+        if us_patents:
+            if patent_number[0:2].isdigit():
+                patent_number = "US" + patent_number
 
         driver.get("https://patents.google.com/")
         time.sleep(2)
@@ -137,6 +140,7 @@ def add_rows(log_func=print):
 
             # Claims text
             # Used for: Claim 1 and Patent Review
+            claims_text = None
             claims_text = simple_html_search(
                 patent_number,
                 "Claims",
@@ -147,6 +151,7 @@ def add_rows(log_func=print):
             )
 
             # Description Text
+            description_text = None
             description_text = simple_html_search(
                 patent_number,
                 "Description",
@@ -162,12 +167,16 @@ def add_rows(log_func=print):
 
             # Claim 1
             # Extract Claim 1 from claims_text
-            claim1 = prompt_gemini(
-                [
-                    claims_text,
-                    "Extract the first claim from this text. Do not use markdown formatting.",
-                ]
-            )
+            if claims_text:
+
+                claim1 = prompt_gemini(
+                    [
+                        claims_text,
+                        "Extract the first claim from this text. Do not use markdown formatting.",
+                    ]
+                )
+            else:
+                claim1 = None
 
             # Patent Review
             # Using claims_text, summarize each claim
@@ -179,27 +188,30 @@ def add_rows(log_func=print):
                 ]
             )"""
 
-            # TODO: Ask dad for definition of circuit, process, package, and system
             # Patent Type
             # Using description_text and claims_text, choose between circuit, process, package, and system
             # circuit: Integrated circuits are compact electronic chips made up of interconnected components that include resistors, transistors, and capacitors.
             # process: Process of creating an electronic device
             # package: A semiconductor package is a metal, plastic, glass, or ceramic casing containing one or more discrete semiconductor devices or integrated circuits
             # system: If it's not the other three, put it into system.
-            patent_type = prompt_gemini(
-                [
-                    description_text,
-                    claims_text,
-                    "Using information from the patent description and patent claims, categorize the patent into one of the following categories: "
-                    "Circuit, Process, Package, or System. "
-                    "Use the following definitions to categorize the patents:"
-                    "Circuit: Integrated circuits are compact electronic chips made up of interconnected components that include resistors, transistors, and capacitors."
-                    "Process: The process of creating or manufacturing an electronic device."
-                    "Package: A semiconductor package is a metal, plastic, glass, or ceramic casing containing one or more discrete semiconductor devices or integrated circuits."
-                    "System: If it's not the other three, classify the patent as System"
-                    "Do not use markdown formatting.",
-                ]
-            )
+            if claims_text and description_text:
+
+                patent_type = prompt_gemini(
+                    [
+                        description_text,
+                        claims_text,
+                        "Using information from the patent description and patent claims, categorize the patent into one of the following categories: "
+                        "Circuit, Process, Package, or System. "
+                        "Use the following definitions to categorize the patents:"
+                        "Circuit: Integrated circuits are compact electronic chips made up of interconnected components that include resistors, transistors, and capacitors."
+                        "Process: The process of creating or manufacturing an electronic device."
+                        "Package: A semiconductor package is a metal, plastic, glass, or ceramic casing containing one or more discrete semiconductor devices or integrated circuits."
+                        "System: If it's not the other three, classify the patent as System"
+                        "Do not use markdown formatting.",
+                    ]
+                )
+            else:
+                patent_type = None
 
             # Main Topic/Subject of the Invention
             # Using description_text, summarize the main topic of the invention in a few sentences
@@ -314,7 +326,9 @@ def open_file_location(filepath):
         subprocess.run(["xdg-open", os.path.dirname(filepath)])
 
 
-def run_patent_scraper(import_file_path, export_file_path, gemini_key, log_func=print):
+def run_patent_scraper(
+    import_file_path, export_file_path, us_patents, gemini_key, log_func=print
+):
     global import_df, export_df, export_path, client
 
     export_path = export_file_path
@@ -324,7 +338,7 @@ def run_patent_scraper(import_file_path, export_file_path, gemini_key, log_func=
 
     import_df, export_df = load_dfs(import_path)
     clean_dfs()
-    add_rows(log_func)
+    add_rows(us_patents, log_func)
     save_file()
     format_saved_file()
     open_file_location(export_path)

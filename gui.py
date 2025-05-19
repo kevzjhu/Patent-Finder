@@ -15,7 +15,7 @@ class MainWindow:
 
         # root
         self.root = root
-        self.root.title("Patent Webscraper")
+        self.root.title("Patent Finder")
 
         # frame1
         self.frame1 = ttk.Frame(root, padding=20)
@@ -24,7 +24,7 @@ class MainWindow:
         # welcome text
         self.welcome = ttk.Label(
             self.frame1,
-            text="Welcome to the Patent Webscraper",
+            text="Welcome to the Patent Finder",
             font=("Arial", 20),
             justify="center",
         )
@@ -60,18 +60,28 @@ class MainWindow:
         self.export_entry.grid(column=0, row=4, pady=(5, 10))
         self.export_var.trace_add("write", self.update_export_name)
 
+        self.us_patents_bool = tkinter.BooleanVar()
+        self.us_patents_button = ttk.Checkbutton(
+            self.frame1,
+            text="US Patents Only",
+            variable=self.us_patents_bool,
+            onvalue=True,
+            offvalue=False,
+        )
+        self.us_patents_button.grid(column=0, row=5)
+
         # begin program button
         # this should be greyed out unless all info is ready
         self.begin_button = ttk.Button(
             self.frame1, text="Go!", command=self.check_all_info
         )
-        self.begin_button.grid(column=0, row=5, pady=(10, 5))
+        self.begin_button.grid(column=0, row=6, pady=(10, 5))
 
         # status text box
         self.status_label = ttk.Label(
             self.frame1, text="Status: Nothing is currently happening"
         )
-        self.status_label.grid(column=0, row=6)
+        self.status_label.grid(column=0, row=7)
 
         self.update_min_size()
 
@@ -136,7 +146,11 @@ class MainWindow:
 
                 try:
                     run_patent_scraper(
-                        self.file_path, export_path, gemini_key, self.log_status
+                        self.file_path,
+                        export_path,
+                        self.us_patents_bool.get(),
+                        gemini_key,
+                        self.log_status,
                     )
                     self.status_label.config(
                         text=f"Status: Done! Export saved to:\n{export_path}",
