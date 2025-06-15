@@ -75,7 +75,7 @@ def add_rows(us_patents, log_func=print):
         # go through every row
         patent_number = row["Patent Number"]
         if us_patents:
-            if patent_number[0:2].isdigit():
+            if not patent_number[0:2].isalpha():
                 patent_number = "US" + patent_number
 
         driver.get("https://patents.google.com/")
