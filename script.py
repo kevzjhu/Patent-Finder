@@ -342,3 +342,9 @@ def run_patent_scraper(
     save_file()
     format_saved_file()
     open_file_location(export_path)
+
+
+def save_file_after_error(export_path):
+    save_file()
+    format_saved_file()
+    open_file_location(export_path)

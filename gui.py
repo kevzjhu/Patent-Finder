@@ -2,7 +2,7 @@ import tkinter
 from tkinter import ttk, filedialog, messagebox
 import sv_ttk
 
-from script import run_patent_scraper
+from script import run_patent_scraper, save_file_after_error
 import os
 from dotenv import load_dotenv
 
@@ -72,6 +72,9 @@ class MainWindow:
 
         # begin program button
         # this should be greyed out unless all info is ready
+        self.has_run_bool = tkinter.BooleanVar()
+        self.has_run_bool.set(False)
+        self.previous_export_path = tkinter.StringVar()
         self.begin_button = ttk.Button(
             self.frame1, text="Go!", command=self.check_all_info
         )
@@ -82,6 +85,14 @@ class MainWindow:
             self.frame1, text="Status: Nothing is currently happening"
         )
         self.status_label.grid(column=0, row=7)
+
+        # save df again button
+        # this should be greyed out unless the program has already run at least once
+        # use self.has_run_bool var
+        self.save_button = ttk.Button(
+            self.frame1, text="Save Again (if output failed)", command=self.save
+        )
+        self.save_button.grid(column=0, row=8, pady=(10, 5))
 
         self.update_min_size()
 
@@ -143,8 +154,10 @@ class MainWindow:
                 load_dotenv()
                 gemini_key = os.getenv("GEMINI_KEY")
                 export_path = f"Files/{self.export_name}.xlsx"
+                self.previous_export_path.set(export_path)
 
                 try:
+                    self.has_run_bool.set(True)
                     run_patent_scraper(
                         self.file_path,
                         export_path,
@@ -159,3 +172,12 @@ class MainWindow:
                 except Exception as e:
                     messagebox.showerror("Error", f"Something went wrong:\n{e}")
                     self.status_label.config(text="Status: Failed. See error.")
+
+                    save_file_after_error(export_path)
+
+    def save(self):
+        print(self.has_run_bool.get())
+        if self.has_run_bool.get() == True:
+            # export_path = f"Files/{self.export_name}.xlsx"
+            # save_file_after_error(export_path)
+            save_file_after_error(self.previous_export_path.get())
